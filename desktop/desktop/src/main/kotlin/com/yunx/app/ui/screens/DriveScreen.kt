@@ -69,6 +69,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.yunx.app.ui.items.PlatformLogos
+import com.yunx.app.ui.items.PlatformLogo
 import com.yunx.app.data.db.BaiduAccountEntity
 import com.yunx.app.data.db.C139AccountEntity
 import com.yunx.app.data.db.GuangYaAccountEntity
@@ -857,20 +859,25 @@ private fun DriveAccountCardContent(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 平台图标：iOS 扁平风 —— 纯轮廓线条，内部透明（无填充圆底）
+        // 平台图标：优先官方 Logo（原样渲染、不裁形）；未收录平台回退 iOS 扁平轮廓图标
         Box(
             modifier = Modifier.size(48.dp),
             contentAlignment = Alignment.Center
         ) {
-            if (account.logoIcon != null) {
-                Icon(
+            val logoPath = PlatformLogos.resPathFor(account.id)
+            when {
+                logoPath != null -> PlatformLogo(
+                    id = account.id,
+                    size = 30.dp,
+                    alpha = if (account.isLoggedIn) 1f else 0.45f
+                )
+                account.logoIcon != null -> Icon(
                     imageVector = account.logoIcon,
                     contentDescription = account.name,
                     tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(28.dp)
                 )
-            } else {
-                Text(
+                else -> Text(
                     text = account.avatarText,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,

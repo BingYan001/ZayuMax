@@ -34,6 +34,11 @@ import com.yunx.app.data.network.Pan123Constants
 import com.yunx.app.data.network.QuarkConstants
 import com.yunx.app.data.network.QuarkCdn
 import com.yunx.app.data.network.ShareLinkParser
+import com.yunx.app.data.network.video.VideoMedia
+import com.yunx.app.data.network.video.VideoMediaKind
+import com.yunx.app.data.network.video.VideoParseException
+import com.yunx.app.data.network.video.VideoParseResult
+import com.yunx.app.data.repository.VideoParseRepository
 import com.yunx.app.data.network.SharePlatform
 import com.yunx.app.data.network.StarSeaApi
 import com.yunx.app.data.network.UCConstants
@@ -78,6 +83,9 @@ sealed interface ResolveUiState {
     data object Loading : ResolveUiState
     data class Detail(val session: ShareSession, val files: List<ShareFile>) : ResolveUiState
     data class Error(val message: String) : ResolveUiState
+
+    /** 短视频解析结果（抖音/快手/微博等）；桌面端抖音走纯 HTTP 路线 */
+    data class Video(val result: VideoParseResult) : ResolveUiState
 }
 
 /**
@@ -142,6 +150,9 @@ class ResolveViewModel(
 
     var uiState by mutableStateOf<ResolveUiState>(ResolveUiState.Idle)
         private set
+
+    /** 短视频解析：识别 → 短链展开 → 平台解析器（桌面端抖音走纯 HTTP 路线） */
+    private val videoParseRepository = VideoParseRepository()
 
     var downloadLink by mutableStateOf<DownloadLink?>(null)
         private set
@@ -891,6 +902,18 @@ class ResolveViewModel(
         }
         viewModelScope.launch {
             uiState = ResolveUiState.Loading
+            // 短视频链接分流（GitHub 之后、网盘口令之前，与手机端一致）：
+            // 抖音/快手/微博/AcFun/B站/小红书/Pixiv 任一命中即走视频解析，不进网盘链路。
+            val video = try {
+                videoParseRepository.parse(link)
+            } catch (e: VideoParseException) {
+                uiState = ResolveUiState.Error(e.message ?: "视频解析失败")
+                return@launch
+            }
+            if (video != null) {
+                uiState = ResolveUiState.Video(video)
+                return@launch
+            }
             // 中文口令兜底（既不是分享链接、也不是 GitHub 链接）：**先迅雷，迅雷没给出可用链接再问星海**。
             // ① 迅雷口令（如「张三丰资源」）：口令是「分享链接 + 提取码」的打包形式，打 shoulei 跳转接口换链接；
             // ② 星海（夸克/UC 中文口令）：换回 pwd_id，再合成分享链接，后续提取码/登录/列表/取链全走既有链路。
@@ -2012,6 +2035,35 @@ class ResolveViewModel(
             val dirFid = link.cleanupDirFid
             if (dirFid != null && cleanupCredential.isNotBlank()) {
                 cleanupRepo.cleanupTempDir(dirFid, cleanupCredential)
+            }
+        }
+    }
+
+    /**
+     * 下载短视频解析出的单条媒体（直链 + 平台要求的请求头原样入队）。
+     * 文件名优先用解析器给的名字，缺省用「标题_序号.扩展名」兜底。
+     * 注：桌面端暂无 DASH 合轨（B站高清为音视频分离），audioUrl 非空的条目下载视频轨。
+     */
+    fun downloadVideoMedia(result: VideoParseResult, media: VideoMedia) {
+        viewModelScope.launch {
+            try {
+                val fallbackName = buildString {
+                    append(result.title.ifBlank { "video" }.take(60))
+                    if (result.medias.size > 1) append("_${result.medias.indexOf(media) + 1}")
+                    append(if (media.kind == VideoMediaKind.VIDEO) ".mp4" else ".jpg")
+                }
+                val id = downloadManager.enqueue(
+                    url = media.url,
+                    fileName = media.fileName.takeIf { it.contains('.') } ?: fallbackName,
+                    headers = media.headers,
+                    size = media.size,
+                    shareUrl = result.url
+                )
+                downloadManager.start(id, media.headers)
+                downloadStarted = true
+            } catch (e: Exception) {
+                Log.e("ResolveVM", "downloadVideoMedia failed: ${e.javaClass.simpleName}: ${e.message}", e)
+                downloadError = "下载启动失败：${e.message ?: e.javaClass.simpleName}"
             }
         }
     }

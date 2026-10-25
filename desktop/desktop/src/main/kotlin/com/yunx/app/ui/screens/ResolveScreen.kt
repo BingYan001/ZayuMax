@@ -326,6 +326,7 @@ fun ResolveScreen(
                     } else null,
                     refreshing = viewModel.githubRefreshing
                 )
+                is ResolveUiState.Video -> VideoResultContent(s.result, viewModel)
                 is ResolveUiState.Loading -> LoadingContent()
                 else -> ResolveInputContent(
                     viewModel = viewModel,
