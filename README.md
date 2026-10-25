@@ -37,7 +37,7 @@
 ### 桌面端（杂鱼互传）
 
 ```bash
-pip install pywebview
+# 无需安装任何第三方依赖（纯 Python 标准库 + Edge 浏览器窗口）
 python tools/desktop/lan_client.py
 # 打包单文件 exe：
 pyinstaller --onefile --name ZayuLan tools/desktop/lan_client.py
