@@ -35,7 +35,7 @@
 
 ### Windows 桌面端
 
-下载 Releases 中的 `ZayuMax-Desktop-vX.Y.Z.zip`，解压后运行 `YunX-Desktop.exe`（便携版，自带运行时，无需安装 Java）。手机端与桌面端共用公告系统，与「杂鱼互传」桌面小工具（`tools/desktop`）可互传文件。
+下载 Releases 中的 `ZayuMax-Desktop-vX.Y.Z.zip`，解压后运行 `YunX-Desktop.exe`（便携版，自带运行时，无需安装 Java）。手机端与桌面端共用公告系统；手机端内置局域网互传，可与桌面端互传文件。
 
 电脑与手机连同一 Wi-Fi 后自动互相发现，即可互传文件与文本。
 
