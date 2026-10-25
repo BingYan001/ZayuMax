@@ -1,0 +1,67 @@
+[versions]
+agp = "8.13.0"
+# Kotlin 2.1.0 -> 2.3.21：液态玻璃用的 Backdrop 库（见下方 backdrop 注释）字节码里的 Kotlin 元数据是
+# mv={2,3,0}，Kotlin 2.1.0 的编译器读不了（会报 "was compiled with an incompatible version of Kotlin"），
+# 所以必须抬到 2.3.x。Kotlin 只向后读、不向前读：本项目其他用旧版 Kotlin 编译的依赖（如 markdownRenderer
+# 0.35.0）不受影响；反向才会出问题。KSP / Room 必须同步（见各自注释）。
+kotlin = "2.3.21"
+coreKtx = "1.17.0"
+webkit = "1.17.1"   # 登录 WebView：关闭 X-Requested-With + 同步桌面 client hints（UserAgentMetadata）
+lifecycleRuntimeKtx = "2.9.2"
+activityCompose = "1.11.0"
+composeBom = "2026.06.01"  
+material3Expressive = "1.5.0-alpha18"
+
+# Room 2.6.1 -> 2.8.5：KSP 已进入 KSP2 单模式（2.3.x 起版本号与 Kotlin 解耦，见 ksp 注释），
+# Room 2.6.x 的处理器是 KSP1 时代的产物，配 KSP2 会在注解处理阶段失败；2.7.0 起才正式支持 KSP2。
+# 2.8.5 的 AAR 元数据：minSdk=23（项目 24 ✓）、无 minCompileSdk 限制，运行期无行为变更。
+room = "2.8.5"
+# KSP 自 2.3.0 起改为独立版本号（不再拼 <kotlin>-<ksp>）：2.3.12（2026-09-09）为当前最新，
+# 官方 release note 已包含 Kotlin 2.4.0 相关修复，兼容 Kotlin 2.3.x / 2.4.x。
+ksp = "2.3.12"
+# 液态玻璃核心库。选 1.0.6 而不是最新的 2.0.1，是实测三条门槛后的唯一可行解：
+#   ① minCompileSdk：2.0.x 全系要求 37，而 API 37 平台（platforms;android-37.x）只有 AGP 9.x 才认，
+#      项目 AGP 8.13.0 会被直接判错 → 要动 AGP 大版本，风险远超 UI 改造范围；1.0.6 要求 36，正好匹配项目 compileSdk。
+#   ② Kotlin：2.0.x 是 mv={2,4,0}（需 Kotlin 2.4）；1.0.6 是 mv={2,3,0}（需 Kotlin 2.3），配合上面的 kotlin 版本。
+#   ③ Compose：2.0.x 依赖 JetBrains Compose 1.12.0（Android 侧指向 androidx ui 1.12.0）；1.0.6 只要 ui 1.10.3，
+#      低于项目现有 1.11.4（BOM 2026.06.01），因此 BOM 与 material3 alpha18 都无需改动 —— §3.10 的三条门槛无需复核。
+#   ④ 公开 API 两代同源：drawBackdrop / drawPlainBackdrop / rememberLayerBackdrop / layerBackdrop /
+#      blur / lens / vibrancy / Highlight / Shadow / InnerShadow 全部存在，组件封装层写法一致。
+# 许可证：Apache-2.0（与项目 AGPL-3.0 兼容），版权声明见仓库根 NOTICE。
+backdrop = "1.0.6"
+material = "1.14.0"   # 官方 Material 主库，自带 com.google.android.material.color.utilities 包
+markdownRenderer = "0.35.0"   # mikepenz/multiplatform-markdown-renderer（GFM 渲染）。
+                              # 0.35.0 由 Kotlin 2.1.x 编译 —— Kotlin 编译器向后兼容，升级到 2.3.21 后仍可直接消费，
+                              # 故本次不改（改它会影响 README 渲染链路，属于超出 UI 任务范围）。0.39+ 需 Kotlin 2.3。
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+[libraries]
+# 原 material-color-utilities 坐标 (com.google.android.material:material-color-utilities:1.0.0) 在 Maven 上不存在。
+# 官方 color.utilities 包就打包在下面这个主库里，import 无需改动。
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3Expressive" }   # 版本说明见上方 material3Expressive
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+# GFM Markdown 渲染（Material3 变体，不含图片加载器；图片相对链接在渲染前预处理为绝对 URL）
+markdownRenderer = { group = "com.mikepenz", name = "multiplatform-markdown-renderer-m3", version.ref = "markdownRenderer" }
+
+# 液态玻璃（Liquid Glass）：底层用 AGSL 运行时着色器做背景折射（lens）+ RenderEffect 做模糊（blur）。
+# 只允许在 ui/glass/ 组件封装层里 import 它，业务页面一律用项目自己的 Glass* 组件（「第三方能力必须收口」原则）。选 1.0.6 的理由见 [versions] 里 backdrop 那段注释。
+backdrop = { group = "io.github.kyant0", name = "backdrop", version.ref = "backdrop" }

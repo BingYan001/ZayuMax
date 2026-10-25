@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Zayu Admin (杂鱼Max 管理端) - 杂鱼Max 公告系统的安卓管理客户端。
+    Copyright (C) 2026 CYQawa
+-->
+<network-security-config>
+    <!--
+        管理端全部走 HTTPS（zayu.pw），禁止一切明文流量。
+        与主 App 不同，这里**没有也不应该有**任何 cleartext 例外：
+        管理端携带的是 ADMIN_TOKEN，明文传输等于把后台钥匙扔在公网上。
+    -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Android 只在 android:debuggable="true" 时应用本块，方便真机抓包调试 -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

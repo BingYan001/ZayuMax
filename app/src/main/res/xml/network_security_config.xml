@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Zayu (杂鱼) - A network drive share-link parser and high-speed downloader for Android.
+    Copyright (C) 2026 CYQawa
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Android only applies this block when android:debuggable="true". -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+
+    <!--
+        应用内公告服务（data/announcement/AnnouncementApi.kt）已迁到 **HTTPS**：
+            https://zayu.pw   （Let's Encrypt，acme.sh 自动续期）
+        走系统信任链即可，这里**不需要**任何明文例外。
+
+        ★ 历史教训（别再踩）：早先公告后端跑在 http://yunx.cyqawa.os.kg，为了它在这里开过
+          一条 <domain-config cleartextTrafficPermitted="true">。切 HTTPS 时**必须两处一起改**
+          （AnnouncementApi.BASE_URL 换成 https + 删掉那条例外），否则留下一个白送的明文口子。
+        ★ 也不要图省事把 base-config 改成 cleartextTrafficPermitted="true"：
+          那等于给**全应用**放开明文（网盘 CDN、更新下载、图床都可能被降级到 http），
+          确实需要明文时只放行那一个域。
+
+        图床（公告封面 / 头像 / 正文配图）通常是**另一个域名**：如果将来换成 http 图床，
+        再按下面形式单独放行（https 图床不受影响，无需放行）：
+            <domain-config cleartextTrafficPermitted="true">
+                <domain includeSubdomains="true">img.example.com</domain>
+            </domain-config>
+    -->
+</network-security-config>
