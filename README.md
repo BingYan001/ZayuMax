@@ -9,8 +9,7 @@
 - **多线程高速下载**：可自定义线程数，支持第三方下载器接管
 - **多账号管理**：多账号切换、登录态自动保活
 - **局域网互传**：手机与电脑互传文件/文本，免流量免登录
-- **桌面端配套**：`tools/desktop` 内含 Windows 桌面客户端「杂鱼互传」（`lan_client.py`，可打包为单文件 exe），与 App 端自动发现配对，单文件最大 512MB
-- **管理端 App**：独立模块 `:admin`，配套公告系统后台管理（需自建公告服务）
+- **Windows 桌面端**：Compose Desktop 构建，功能与手机端对应（账号管理、下载、公告、液态玻璃 UI），便携包见 [Releases](../../releases)
 - **玻璃拟态 UI**：动态取色、深色模式、流畅动效
 
 ## 下载
@@ -34,14 +33,9 @@
 - 需要 JDK 17 + Android SDK
 - 仓库自带 `debug.keystore`，无签名配置也可直接编译 debug
 
-### 桌面端（杂鱼互传）
+### Windows 桌面端
 
-```bash
-# 无需安装任何第三方依赖（纯 Python 标准库 + Edge 浏览器窗口）
-python tools/desktop/lan_client.py
-# 打包单文件 exe：
-pyinstaller --onefile --name ZayuLan tools/desktop/lan_client.py
-```
+下载 Releases 中的 `杂鱼Max-桌面端-vX.Y.Z.zip`，解压后运行 `YunX-Desktop.exe`（便携版，自带运行时，无需安装 Java）。手机端与桌面端共用公告系统，与「杂鱼互传」桌面小工具（`tools/desktop`）可互传文件。
 
 电脑与手机连同一 Wi-Fi 后自动互相发现，即可互传文件与文本。
 
