@@ -1,0 +1,38 @@
+Zayu（杂鱼）
+Copyright (C) 2026 CYQawa
+Licensed under the GNU Affero General Public License v3.0 (见 LICENSE)
+
+本产品包含以下第三方开源组件。依据各自许可证的要求，在此保留其版权与许可声明。
+NOTICE 中列的组件均**未修改其源代码**，只以二进制依赖（Maven 坐标）方式引用。
+
+================================================================================
+1. Backdrop（AndroidLiquidGlass）
+================================================================================
+  Maven 坐标 : io.github.kyant0:backdrop:1.0.6
+  上游仓库   : https://github.com/Kyant0/AndroidLiquidGlass
+  文档       : https://kyant.gitbook.io/backdrop
+  Copyright  : Copyright (C) 2025 Kyant (https://github.com/Kyant0)
+  License    : Apache License, Version 2.0
+               许可证全文见 licenses/APACHE-2.0.txt
+  用途       : 液态玻璃（Liquid Glass）效果——背景模糊（RenderEffect）与
+               边缘折射 / 色散（AGSL 运行时着色器）的绘制原语。
+  引用范围   : 全部封装在 app/src/main/kotlin/com/zayu/app/ui/glass/ 下的 Glass* 组件里，
+               业务页面通过 GlassSurface 等封装间接使用，未在其上做任何源码级修改。
+
+  Apache-2.0 与本项目 AGPL-3.0 的兼容性说明：
+  Apache-2.0 是宽松许可证，其条款不与 AGPL-3.0 冲突（Apache-2.0 未要求以相同许可证
+  发布衍生作品，也不含 AGPL 所限制的额外条件）。两者组合时的义务是：
+  ① 保留 Apache-2.0 的版权声明与许可证全文（即本文件与 licenses/APACHE-2.0.txt）；
+  ② 若修改了 Apache-2.0 组件的源码，须声明「已修改」——本项目未修改，故无需声明；
+  ③ 分发本应用时，AGPL-3.0 要求提供完整对应源代码，该义务与本文件中第三方组件的
+     声明互不影响：本项目自己的代码继续以 AGPL-3.0 发布。
+
+================================================================================
+2. 其余第三方组件
+================================================================================
+  AndroidX / Jetpack Compose / Material Components / OkHttp / Room / Kotlin 标准库
+  等依赖各自带有其许可证与 NOTICE（多为 Apache-2.0）。完整依赖树可用以下命令复现：
+
+      ./gradlew :app:dependencies --configuration debugRuntimeClasspath
+
+  这些组件的许可与版权声明随其构件分发，本项目未做改写。

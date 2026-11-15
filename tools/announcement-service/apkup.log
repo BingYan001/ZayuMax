@@ -1,0 +1,14 @@
+local: 6339068 bytes md5=dc6fe7183f8a681366cc11ea35a6d235
+Traceback (most recent call last):
+  File "E:\AI创作文件\云析玻璃ai\tools\announcement-service\upload_apk.py", line 21, in <module>
+    c = connect()
+  File "E:\AI创作文件\云析玻璃ai\tools\announcement-service\deploy.py", line 42, in connect
+    c.connect(HOST, port=PORT, username=USER, password=PWD, timeout=20,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              banner_timeout=40, auth_timeout=90, allow_agent=False, look_for_keys=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LENOVO\.workbuddy\binaries\python\envs\default\Lib\site-packages\paramiko\client.py", line 445, in connect
+    server_key = t.get_remote_server_key()
+  File "C:\Users\LENOVO\.workbuddy\binaries\python\envs\default\Lib\site-packages\paramiko\transport.py", line 880, in get_remote_server_key
+    raise SSHException("No existing session")
+paramiko.ssh_exception.SSHException: No existing session

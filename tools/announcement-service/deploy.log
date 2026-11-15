@@ -1,0 +1,95 @@
+==============================================================
+STEP 0  环境核对
+==============================================================
+Ubuntu 22.04 LTS
+7.4.33
+/dev/vda1        58G   12G   47G  21% /
+               total        used        free      shared  buff/cache   available
+Mem:            3877        1130         139           7        2607        2448
+OS: Ubuntu 22.04 LTS | PHP: 7.4.33
+12520688
+占用基线: 11.94 GB
+5fa95054e1399fdd37675eb2233e1228  -
+nginx 全量 conf 指纹: 5fa95054e1399fdd37675eb2233e1228  -
+mem:
+total        used        free      shared  buff/cache   available
+Mem:            3877        1130         139           7        2607        2448
+
+==============================================================
+STEP 1  建目录（只新增）
+==============================================================
+drwxr-x--- 2 root root 4096 Oct 17 17:34 /www/ann-data/zayu-ann
+drwxr-xr-x 2 root root 4096 Oct 17 17:34 /www/wwwroot/zayu-ann
+
+==============================================================
+STEP 2  上传两个 PHP 文件
+==============================================================
+  api.php      20150 B -> /www/wwwroot/zayu-ann/api.php
+  admin.php    12189 B -> /www/wwwroot/zayu-ann/admin.php
+total 32
+-rw-r----- 1 www www 12189 Oct 17 17:37 admin.php
+-rw-r----- 1 www www 20150 Oct 17 17:37 api.php
+
+==============================================================
+STEP 3  生成 ADMIN_TOKEN
+==============================================================
+  已生成（长度 44），落盘 /www/ann-data/zayu-ann/admin.token（600，www 属主）
+
+==============================================================
+STEP 4  写 nginx vhost（新增，不动任何既有 conf）
+==============================================================
+  写入 /etc/nginx/conf.d/20-ann.zayu-annbingyanshop.conf
+
+==============================================================
+STEP 5  nginx 语法检查 + 平滑 reload
+==============================================================
+[stderr] nginx: [warn] conflicting server name "xn--jprt0p.xyz" on 0.0.0.0:80, ignored
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+0660f2544a1fb78699a1a830b14ef804  -
+新增 conf 后指纹: 0660f2544a1fb78699a1a830b14ef804  -
+active
+
+==============================================================
+STEP 6  本机自检（绕 DNS，用 Host 头打 127.0.0.1）
+==============================================================
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+12527948
+
+==============================================================
+STEP 7  公网可达性（DNS 可能还没生效，NXDOMAIN 属正常）
+==============================================================
+public via domain: 000
+public via IP+Host: 404
+/dev/vda1        58G   12G   47G  21% /
+
+==============================================================
+部署完成 · 空间账单
+==============================================================
+部署前 df:
+  /dev/vda1        58G   12G   47G  21% /
+部署后 df:
+  /dev/vda1        58G   12G   47G  21% /
+本次新增占用: 7.09 MB
+
+站点根 : /www/wwwroot/zayu-ann
+数据目录: /www/ann-data/zayu-ann
+vhost  : /etc/nginx/conf.d/20-ann.zayu-annbingyanshop.conf
+后台   : http://ann.bingyan.shop/admin.php
+API    : http://ann.bingyan.shop/api/v1/announcements
+TOKEN  : 见 /www/ann-data/zayu-ann/admin.token
+
+>>> 下一步：把 ann.bingyan.shop 的 DNS A 记录指向 107.151.245.232

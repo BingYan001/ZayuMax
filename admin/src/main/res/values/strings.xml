@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Zayu Admin (杂鱼Max 管理端) - 杂鱼Max 公告系统的安卓管理客户端。
+    Copyright (C) 2026 CYQawa
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+-->
+<resources>
+    <string name="app_name">杂鱼管理</string>
+
+    <!-- 登录页 -->
+    <string name="login_title">杂鱼管理</string>
+    <string name="login_subtitle">公告系统管理端</string>
+    <string name="login_token_label">管理密钥</string>
+    <string name="login_token_hint">粘贴 ADMIN_TOKEN</string>
+    <string name="login_server_label">服务地址</string>
+    <string name="login_action">登录</string>
+    <string name="login_checking">正在验证…</string>
+
+    <!-- 通用 -->
+    <string name="action_save">保存</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_delete">删除</string>
+    <string name="action_retry">重试</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_new">新建公告</string>
+    <string name="action_logout">退出登录</string>
+    <string name="loading">加载中…</string>
+
+    <!-- 列表 -->
+    <string name="tab_all">全部</string>
+    <string name="tab_published">已发布</string>
+    <string name="tab_draft">草稿</string>
+    <string name="tab_archived">已归档</string>
+    <string name="empty_list">还没有公告</string>
+    <string name="badge_pinned">置顶</string>
+
+    <!-- 编辑 -->
+    <string name="edit_new_title">新建公告</string>
+    <string name="edit_title">标题</string>
+    <string name="edit_summary">摘要</string>
+    <string name="edit_content">正文（支持 Markdown）</string>
+    <string name="edit_author">作者</string>
+    <string name="edit_publisher">发布者</string>
+    <string name="edit_publish_at">定时发布时间（留空=立即）</string>
+    <string name="edit_pinned">置顶</string>
+    <string name="edit_cover">封面图</string>
+    <string name="edit_images">图集</string>
+    <string name="edit_upload">上传图片</string>
+    <string name="edit_status">状态</string>
+
+    <!-- 统计 -->
+    <string name="stats_total">公告总数</string>
+    <string name="stats_published">已发布</string>
+    <string name="stats_views">总浏览量</string>
+    <string name="stats_db">数据库占用</string>
+</resources>

@@ -1,0 +1,8 @@
+v1.3.0
+- Renamed to "Zayu Max" (杂鱼Max), with package name and internal identifiers updated
+- Device fingerprints (123 / Baidu / Xunlei) are now part of the credential backup, so importing a backup after a package rename or on a new device no longer registers as a new device
+- New "Auto-backup login state": set a passphrase to export an encrypted backup on the first launch of each day, keeping the latest 3 copies
+- Removed the in-app GitHub repository and in-app update entries
+- Faster failure for the announcement API; no longer slows down cold start when the backend is unreachable
+- Fixed clipped label text in the long-press magnifier of the bottom navigation bar
+- New app icon
